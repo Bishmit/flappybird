@@ -7,44 +7,23 @@ Game::Game()
 	initvaraible(); 
 }
 
-Game::~Game()
-{
-	delete this->window; 
-
-	// deleting the texture 
-	for (auto& i : pipemap) {
-		delete i.second; 
-	}
-	
-	//deleting from vectors
-	for (auto* i : p) {
-		delete i; 
-	}
-
-	//deleting from vectors
-	for (auto* i : p1) {
-		delete i;
-	}
-}
-
 void Game::update()
 {
 	pollevents();
 	b.update();
-	b.restrictboundarycollison(this->window); 
+	b.restrictboundarycollison(window.get()); 
 	if (!gameover) {
 		movepipe();
-		for (auto* i : p) {
+		for (auto &i : p) {
 			i->update();
 		}
-		for (auto* i : p1) {
+		for (auto &i : p1) {
 			i->update();
 		}
 	}
 	scoresystem(); 
 	birdpipecollison(); 
 	deletepipe(); 
-	deleteanotherpipe(); 
 }
 
 void Game::render()
@@ -53,20 +32,20 @@ void Game::render()
 	this->window->draw(bgsprite); 
 
 	for (int i = 0; i < p.size(); i++) {
-		p[i]->render(window); 
+		p[i]->render(window.get()); 
 	}
 	
 	for (int i = 0; i < p1.size(); i++) {
-		p1[i]->render(window);
+		p1[i]->render(window.get());
 	}
-	b.render(this->window);
+	b.render(this->window.get());
 	window->draw(text); 
 	this->window->display(); 
 }
 
 void Game::initwindow()
 {
-	this->window = new sf::RenderWindow(sf::VideoMode(288, 512), "Flappy Bird"); 
+	window = std::make_unique<sf::RenderWindow>(sf::VideoMode(288, 512), "Flappy Bird");
 	window->setFramerateLimit(60); 
 }
 
@@ -110,10 +89,10 @@ const bool Game::isGameRunning() const {
 
 void Game::initpipetexture() {
 	// it will manage the thing 
-	pipemap["uppipe"] = new sf::Texture(); 
+	pipemap["uppipe"] = std::make_unique< sf::Texture>(); 
 	pipemap["uppipe"]->loadFromFile("Assets/pipeup.png");
 
-	pipemap["downpipe"] = new sf::Texture();
+	pipemap["downpipe"] = std::make_unique<sf::Texture>();
 	pipemap["downpipe"]->loadFromFile("Assets/pipedown.png"); 
 }
 
@@ -121,43 +100,30 @@ void Game::movepipe() {
 	// Creating the pipe dynamically
 	static sf::Clock cooldownClock;
 	const sf::Time cooldownTime = sf::seconds(0.9);
-	randno = rand() % 130; 
-	randnoforpipe2 = rand() % 80; 
+	randno = rand() % 130;
+	randnoforpipe2 = rand() % 80;
 	if (cooldownClock.getElapsedTime() >= cooldownTime) {
-		this->p.push_back(new pipes(this->pipemap["downpipe"], 300.f, -256.f + randno ,-2.f, 0.f, 1.5f));
-		this->p1.push_back(new pipes(this->pipemap["uppipe"], 300.f, 250.f + randnoforpipe2 , -2.f, 0.f, 1.5f));
+		p.push_back(std::make_unique<pipes>(pipemap["downpipe"].get(), 300.f, -256.f + randno, -2.f, 0.f, 1.5f));
+		p1.push_back(std::make_unique<pipes>(pipemap["uppipe"].get(), 300.f, 250.f + randnoforpipe2, -2.f, 0.f, 1.5f));
 		cooldownClock.restart();
 	}
 }
 
 void Game::deletepipe() {
 	// deleting the pipes once it reach out of the window
-	int index = 0;
-	for (auto* i : p) {
-		if (i->getbounds().left <= -50.f) {
-			delete this->p[index];
-			this->p.erase(this->p.begin() + index);
-			std::cout << "shit works" << "\n";
-		}
-		++index;
-		break; 
-	}
-	
+	auto it = std::remove_if(p.begin(), p.end(), [&](const std::unique_ptr<pipes>& pipe) {
+		return pipe->getbounds().left <= -50.f;
+		});
+
+	p.erase(it, p.end());
+
+	auto it1 = std::remove_if(p1.begin(), p1.end(), [&](const std::unique_ptr<pipes>& pipe) {
+		return pipe->getbounds().left <= -50.f;
+		});
+
+	p1.erase(it1, p1.end());
 }
 
-void Game::deleteanotherpipe() {
-	// deleting the pipes once it reach out of the window
-	int index = 0;
-	for (auto* i : p1) {
-		if (i->getbounds().left <= -50.f) {
-			delete this->p1[index];
-			this->p1.erase(this->p1.begin() + index);
-			std::cout << "shit2 works" << "\n";
-		}
-		++index;
-		break; 
-	}
-}
 
 void Game::birdpipecollison() {
 	bool collisionDetected = false;
@@ -182,7 +148,7 @@ void Game::birdpipecollison() {
 
 	if (collisionDetected) {
 		std::cout << "Collision detected!" << std::endl;
-		for (auto i : p) {
+		for (auto &i : p) {
 			gameover = true; 
 			b.is_flying = true; 
 			b.iskeypressed = true; 
