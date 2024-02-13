@@ -26,14 +26,37 @@ bird::bird():isflapping(false)
 void bird::update()
 {
 	birdsprite.move(0.f, gravity*1.5f); 
+	birdsprite.setTexture(birdtex2);
+	static sf::Clock cooldownClock;
+	const sf::Time cooldownTime = sf::milliseconds(200);
+	if (cooldownClock.getElapsedTime() >= cooldownTime && !is_flying) {
+		birdsprite.setTexture(birdtex1);
+		cooldownClock.restart();
+	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && !iskeypressed) {
 		isflapping = true; 
-		birdsprite.setTexture(birdtex2);
+		
 		this->birdsprite.move(0,this->speed);
+		float rotation = birdsprite.getRotation();
+		if (rotation >= -15.f) {
+			birdsprite.setRotation(-15.f); // Set rotation to -15 degrees
+		}
 	}
 	else {
 		isflapping = false; 
-		birdsprite.setTexture(birdtex1); 
+		float rotation = birdsprite.getRotation();
+		if (rotation >= 15.f) {
+			birdsprite.setRotation(15.f); // Set rotation to 15 degrees
+		}
+	}
+}
+
+void bird::restrictboundarycollison(const sf::RenderWindow *target) {
+	if (this->birdsprite.getGlobalBounds().top <= 0.f) {
+		this->birdsprite.setPosition(this->birdsprite.getGlobalBounds().left, 3.f);
+	}
+	if (this->birdsprite.getGlobalBounds().top + this->birdsprite.getGlobalBounds().height >= target->getSize().y) {
+		this->birdsprite.setPosition(0.f+ this->birdsprite.getGlobalBounds().left, target->getSize().y - this->birdsprite.getGlobalBounds().height);
 	}
 }
 

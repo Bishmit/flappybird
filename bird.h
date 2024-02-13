@@ -14,10 +14,11 @@ private:
 	void initbird(); 
 	void initvariable(); 
 public: 
-	bool iskeypressed; 
+	bool iskeypressed,is_flying; 
 	bird(); 
 
 	void update();
+	void restrictboundarycollison(const sf::RenderWindow* target);
 	void render(sf::RenderTarget* target);
 
 	sf::FloatRect getbounds();

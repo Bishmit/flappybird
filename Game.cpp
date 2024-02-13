@@ -31,6 +31,7 @@ void Game::update()
 {
 	pollevents();
 	b.update();
+	b.restrictboundarycollison(this->window); 
 	if (!gameover) {
 		movepipe();
 		for (auto* i : p) {
@@ -119,7 +120,7 @@ void Game::initpipetexture() {
 void Game::movepipe() {
 	// Creating the pipe dynamically
 	static sf::Clock cooldownClock;
-	const sf::Time cooldownTime = sf::seconds(1);
+	const sf::Time cooldownTime = sf::seconds(0.9);
 	randno = rand() % 130; 
 	randnoforpipe2 = rand() % 80; 
 	if (cooldownClock.getElapsedTime() >= cooldownTime) {
@@ -183,6 +184,7 @@ void Game::birdpipecollison() {
 		std::cout << "Collision detected!" << std::endl;
 		for (auto i : p) {
 			gameover = true; 
+			b.is_flying = true; 
 			b.iskeypressed = true; 
 		}
 	}
