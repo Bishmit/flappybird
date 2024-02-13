@@ -200,7 +200,7 @@ void Game::scoresystem() {
 		else {
 			score++; 
 			text.setString("Score: " + std::to_string(this->score/3));
-			// so i divide by 3 and make it increase by 3 point haha this works but this is not good logic 
+			// so i divide by 3 and make it increase by 1 point haha this works but this is not good logic 
 			text.setPosition(170.f, 5.f);
 			is_scored = false;
 		}
