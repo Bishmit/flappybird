@@ -11,7 +11,7 @@ pipes::pipes(sf::Texture* pipetex, float pos_x, float pos_y, float dir_x, float 
 
 void pipes::update()
 {
-	this->pipesprite.move(this->movementspeed * this->dir); 
+		this->pipesprite.move(this->movementspeed * this->dir);
 }
 
 void pipes::render(sf::RenderTarget* target)
@@ -22,4 +22,10 @@ void pipes::render(sf::RenderTarget* target)
 sf::FloatRect pipes::getbounds()
 {
 	return pipesprite.getGlobalBounds();
+}
+
+
+sf::Vector2f pipes::getpos()
+{
+	return pipesprite.getPosition();
 }

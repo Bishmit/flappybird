@@ -13,6 +13,8 @@ private:
 	sf::Event event; 
 	sf::Texture bgtex; 
 	sf::Sprite bgsprite;  
+	sf::Text text; 
+	sf::Font font; 
 
 	// private function
 	void initwindow();
@@ -23,7 +25,8 @@ private:
 	std::map<std::string, sf::Texture*> pipemap; 
 	bird b;
 	std::vector<pipes*>p, p1; 
-	int randno, randnoforpipe2; 
+	int randno, randnoforpipe2, score; 
+	bool gameover, is_scored; 
 public: 
 	Game(); 
 	~Game(); 
@@ -33,6 +36,9 @@ public:
 	void movepipe();
 	void deletepipe();
 	void deleteanotherpipe();
+	void birdpipecollison();
+	void scoresystem();
+	//void gettinscore();
 	void movebird();
 	void update(); 
 	void render(); 

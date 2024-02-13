@@ -13,8 +13,8 @@ void bird::initbird()
 
 void bird::initvariable()
 {
-	this->gravity = 0.2f; 
-	this->speed = -0.15f; 
+	this->gravity = 2.f; 
+	this->speed = -5.f; 
 }
 
 bird::bird():isflapping(false)
@@ -25,8 +25,8 @@ bird::bird():isflapping(false)
 
 void bird::update()
 {
-	birdsprite.move(0.f, gravity*0.5f); 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+	birdsprite.move(0.f, gravity*1.5f); 
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && !iskeypressed) {
 		isflapping = true; 
 		birdsprite.setTexture(birdtex2);
 		this->birdsprite.move(0,this->speed);
@@ -42,3 +42,11 @@ void bird::render(sf::RenderTarget* target)
 	target->draw(birdsprite); 
 }
 
+sf::FloatRect bird::getbounds()
+{
+	return birdsprite.getGlobalBounds();
+}
+sf::Vector2f bird::getpos()
+{
+	return birdsprite.getPosition();
+}

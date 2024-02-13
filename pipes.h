@@ -12,5 +12,6 @@ public:
 	void update(); 
 	void render(sf::RenderTarget* target); 
 	sf::FloatRect getbounds(); 
+	sf::Vector2f getpos(); 
 };
 
