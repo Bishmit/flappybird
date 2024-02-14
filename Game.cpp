@@ -169,7 +169,6 @@ void Game::scoresystem() {
 	// here upper condition break and now ball escape from pipe and now we have to increase the score 
 				score++;
 				text.setString("Score: " + std::to_string(this->score));
-				// so i divide by 3 and make it increase by 1 point haha this works but this is not good logic 
 				text.setPosition(170.f, 5.f);
 				is_scored = false; // after increasing we have to make the condition false to prevent further scoring
 			}
