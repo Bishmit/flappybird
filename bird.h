@@ -25,5 +25,7 @@ public:
 
 	sf::Vector2f getpos();
 
+	void setposition(float,float);
+
 };
 

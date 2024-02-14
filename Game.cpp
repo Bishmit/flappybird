@@ -14,16 +14,22 @@ void Game::update()
 	b.restrictboundarycollison(window.get()); 
 	if (!gameover) {
 		movepipe();
+		spawnandmovepipe(); 
 		for (auto &i : p) {
 			i->update();
 		}
 		for (auto &i : p1) {
 			i->update();
 		}
+		for (auto& i : groundVector) {
+			i->update();
+		}
 	}
 	scoresystem(); 
-	birdpipecollison(); 
-	deletepipe(); 
+	birdpipecollison();
+	makegroundcollision(); 
+	deleteground(); 
+	deletepipe();
 }
 
 void Game::render()
@@ -37,6 +43,9 @@ void Game::render()
 	
 	for (int i = 0; i < p1.size(); i++) {
 		p1[i]->render(window.get());
+	}
+	for (int i = 0; i < groundVector.size(); i++) {
+		groundVector[i]->render(window.get());
 	}
 	b.render(this->window.get());
 	window->draw(text); 
@@ -109,6 +118,22 @@ void Game::movepipe() {
 	}
 }
 
+void Game::spawnandmovepipe() {
+	static sf::Clock cooldownclock; 
+	const sf::Time cooldowntime = sf::milliseconds(200); 
+	if (cooldownclock.getElapsedTime() >= cooldowntime) {
+		groundVector.push_back(std::make_unique<ground>(-1.f, 0.f, 0.f, window->getSize().y - 50.f, 2.f));
+		cooldownclock.restart(); 
+	}
+}
+
+void Game::deleteground() {
+	auto it = std::remove_if(groundVector.begin(), groundVector.end(), [&](const std::unique_ptr<ground>& g) {
+		return g->getbounds().left < -50.f;
+		}); 
+	groundVector.erase(it, groundVector.end()); 
+}
+
 void Game::deletepipe() {
 	// deleting the pipes once it reach out of the window
 	auto it = std::remove_if(p.begin(), p.end(), [&](const std::unique_ptr<pipes>& pipe) {
@@ -147,7 +172,6 @@ void Game::birdpipecollison() {
 	}
 
 	if (collisionDetected) {
-		std::cout << "Collision detected!" << std::endl;
 		for (auto &i : p) {
 			gameover = true; 
 			b.is_flying = true; 
@@ -165,8 +189,8 @@ void Game::scoresystem() {
 			}
 		}
 		else {
-			if (b.getbounds().left > p[i]->getpos().x + p[i]->getbounds().width) {
-	// here upper condition break and now ball escape from pipe and now we have to increase the score 
+			if (b.getbounds().left + b.getpos().x > p[i]->getpos().x + p[i]->getbounds().width) {
+	       // here upper condition break and now ball escape from pipe and now we have to increase the score 
 				score++;
 				text.setString("Score: " + std::to_string(this->score));
 				text.setPosition(170.f, 5.f);
@@ -177,6 +201,19 @@ void Game::scoresystem() {
 	}
 }
 
+void Game::makegroundcollision() {
+	for (int i = 0; i < groundVector.size(); i++) {
+		if (b.getbounds().intersects(groundVector[i]->getbounds())) {
+			b.setposition(10.f, 439.f); 	
+			/* 
+			-  little trick for this
+			-  first i find the position of x and y co-oridinate of the ball when it touches the ground 
+			-  by doing std::cout << b.getpos().x <<"  " << b.getpos().y << "\n";
+			-  and i set the first value to the x and y co-oridinates so it seems like it stops there hehe 
+			*/
+		}
+	}
+}
 
 
 

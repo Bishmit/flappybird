@@ -1,6 +1,7 @@
 #include "SFML/Graphics.hpp"
 #include"bird.h"
 #include"pipes.h"
+#include"ground.h"
 #include<memory>
 #include<vector>
 #include<unordered_map>
@@ -20,6 +21,7 @@ private:
 	std::unordered_map<std::string, std::unique_ptr<sf::Texture>> pipemap; 
 	std::vector<std::unique_ptr<pipes>> p; 
 	std::vector<std::unique_ptr<pipes>> p1;
+	std::vector<std::unique_ptr<ground>> groundVector; 
 
 	// private function
 	void initwindow();
@@ -35,9 +37,12 @@ public:
 	const bool isGameRunning() const;
 	void initpipetexture();
 	void movepipe();
+	void spawnandmovepipe();
+	void deleteground();
 	void deletepipe();
 	void birdpipecollison();
 	void scoresystem();
+	void makegroundcollision();
 	void update(); 
 	void render(); 
  };

@@ -21,11 +21,13 @@
   <ItemGroup>
     <ClInclude Include="bird.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="ground.h" />
     <ClInclude Include="pipes.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="bird.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="ground.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="pipes.cpp" />
   </ItemGroup>

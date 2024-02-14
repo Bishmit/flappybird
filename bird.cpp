@@ -55,9 +55,6 @@ void bird::restrictboundarycollison(const sf::RenderWindow *target) {
 	if (this->birdsprite.getGlobalBounds().top <= 0.f) {
 		this->birdsprite.setPosition(this->birdsprite.getGlobalBounds().left, 3.f);
 	}
-	if (this->birdsprite.getGlobalBounds().top + this->birdsprite.getGlobalBounds().height >= target->getSize().y) {
-		this->birdsprite.setPosition(0.f+ this->birdsprite.getGlobalBounds().left, target->getSize().y - this->birdsprite.getGlobalBounds().height);
-	}
 }
 
 void bird::render(sf::RenderTarget* target)
@@ -72,4 +69,8 @@ sf::FloatRect bird::getbounds()
 sf::Vector2f bird::getpos()
 {
 	return birdsprite.getPosition();
+}
+
+void bird::setposition(float x, float y) {
+	birdsprite.setPosition(x,y);
 }
