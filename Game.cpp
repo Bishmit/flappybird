@@ -99,7 +99,7 @@ void Game::initpipetexture() {
 void Game::movepipe() {
 	// Creating the pipe dynamically
 	static sf::Clock cooldownClock;
-	const sf::Time cooldownTime = sf::seconds(0.9);
+	const sf::Time cooldownTime = sf::seconds(1);
 	randno = rand() % 130;
 	randnoforpipe2 = rand() % 80;
 	if (cooldownClock.getElapsedTime() >= cooldownTime) {
@@ -157,23 +157,29 @@ void Game::birdpipecollison() {
 }
 
 void Game::scoresystem() {
-	
 	for (int i = 0; i < p.size(); i++) {
 		if (!is_scored) {
-			if (b.getbounds().left > p[i]->getbounds().left + p[i]->getbounds().width ) {
-				// for some reason it was increasing with 3 points 
+			if (b.getbounds().left > p[i]->getbounds().left && b.getpos().x + b.getbounds().width < p[i]->getpos().x + p[i]->getbounds().width) {
+				// here we start checking, the bird has now entered the pipe but isn't outside of pipe, when it reach outside the condition breaks
 				is_scored = true;
 			}
 		}
 		else {
-			score++; 
-			text.setString("Score: " + std::to_string(this->score/3));
-			// so i divide by 3 and make it increase by 1 point haha this works but this is not good logic 
-			text.setPosition(170.f, 5.f);
-			is_scored = false;
+			if (b.getbounds().left > p[i]->getpos().x + p[i]->getbounds().width) {
+	// here upper condition break and now ball escape from pipe and now we have to increase the score 
+				score++;
+				text.setString("Score: " + std::to_string(this->score));
+				// so i divide by 3 and make it increase by 1 point haha this works but this is not good logic 
+				text.setPosition(170.f, 5.f);
+				is_scored = false; // after increasing we have to make the condition false to prevent further scoring
+			}
+			
 		}
 	}
 }
+
+
+
 
 
 
