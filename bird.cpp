@@ -21,6 +21,10 @@ bird::bird():isflapping(false)
 {
 	initbird(); 
 	initvariable(); 
+	if (!wingbuffer.loadFromFile("Audio/Wing.wav")) {
+		std::cout << "Error loading wing sound " << "\n";
+	}
+	wingsound.setBuffer(wingbuffer);
 }
 
 void bird::update()
@@ -35,7 +39,7 @@ void bird::update()
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && !iskeypressed) {
 		isflapping = true; 
-		
+		wingsound.play(); 
 		this->birdsprite.move(0,this->speed);
 		float rotation = birdsprite.getRotation();
 		if (rotation >= -15.f) {

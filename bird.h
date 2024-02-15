@@ -1,11 +1,15 @@
 #pragma once
 #include<SFML/Graphics.hpp>
+#include<SFML/Audio.hpp>
 class bird
 {
 private: 
 	sf::Texture birdtex1; 
 	sf::Texture birdtex2;
 	sf::Sprite birdsprite; 
+
+	sf::SoundBuffer wingbuffer;
+	sf::Sound wingsound;
 	
 	float gravity, speed; 
 	bool isflapping;

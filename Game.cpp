@@ -5,6 +5,7 @@ Game::Game()
 	inittexture(); 
 	initpipetexture(); 
 	initvaraible(); 
+	initsound(); 
 }
 
 void Game::update()
@@ -13,8 +14,8 @@ void Game::update()
 	b.update();
 	b.restrictboundarycollison(window.get()); 
 	if (!gameover) {
-		movepipe();
-		spawnandmovepipe(); 
+		spawnandmovepipe();
+		spawnandmoveground(); 
 		for (auto &i : p) {
 			i->update();
 		}
@@ -122,7 +123,7 @@ void Game::initpipetexture() {
 	pipemap["downpipe"]->loadFromFile("Assets/pipedown.png"); 
 }
 
-void Game::movepipe() {
+void Game::spawnandmovepipe() {
 	// Creating the pipe dynamically
 	static sf::Clock cooldownClock;
 	const sf::Time cooldownTime = sf::seconds(1);
@@ -135,7 +136,7 @@ void Game::movepipe() {
 	}
 }
 
-void Game::spawnandmovepipe() {
+void Game::spawnandmoveground() {
 	static sf::Clock cooldownclock; 
 	const sf::Time cooldowntime = sf::milliseconds(200); 
 	if (cooldownclock.getElapsedTime() >= cooldowntime) {
@@ -169,27 +170,23 @@ void Game::deletepipe() {
 
 void Game::birdpipecollison() {
 	bool collisionDetected = false;
-
-	
 	for (int i = 0; i < p.size(); i++) {
 		if (p[i]->getbounds().intersects(b.getbounds())) {
 			collisionDetected = true;
 			break; 
 		}
 	}
-
 	
-	if (!collisionDetected) {
 		for (int i = 0; i < p1.size(); i++) {
 			if (p1[i]->getbounds().intersects(b.getbounds())) {
 				collisionDetected = true;
 				break; 
 			}
 		}
-	}
 
 	if (collisionDetected) {
 		for (auto &i : p) {
+			hitsound.play();
 			gameover = true; 
 			b.is_flying = true; 
 			b.iskeypressed = true; 
@@ -211,6 +208,7 @@ void Game::scoresystem() {
 				score++;
 				text.setString("Score: " + std::to_string(this->score));
 				text.setPosition(170.f, 5.f);
+				pointsound.play(); 
 				is_scored = false; // after increasing we have to make the condition false to prevent further scoring
 			}
 			
@@ -221,6 +219,7 @@ void Game::scoresystem() {
 void Game::makegroundcollision() {
 	for (int i = 0; i < groundVector.size(); i++) {
 		if (b.getbounds().intersects(groundVector[i]->getbounds())) {
+			hitsound.play(); 
 			b.setposition(10.f, 439.f); 	
 			/* 
 			-  little trick for this
@@ -255,6 +254,18 @@ void Game::restartGame() {
 	p1.clear(); 
 	this->score = 0; 
 	text.setString("Score: " + std::to_string(this->score));
+}
+
+void Game::initsound() {
+	if (!hitbuffer.loadFromFile("Audio/Hit.wav")) {
+		std::cout << "Error loading hit sound " << "\n";
+	}
+	hitsound.setBuffer(hitbuffer); 
+
+	if (!pointbuffer.loadFromFile("Audio/Point.wav")) {
+		std::cout << "Error loading point sound " << "\n";
+	}
+	pointsound.setBuffer(pointbuffer);
 
 }
 

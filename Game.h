@@ -19,6 +19,14 @@ private:
 	sf::Texture tex; // this is the texture of the gameover png 
 	sf::Sprite sprite;// this is the sprite of the gameover png
 
+	// for audio
+	sf::SoundBuffer hitbuffer; 
+	sf::Sound hitsound; 
+
+	sf::SoundBuffer pointbuffer;
+	sf::Sound pointsound;
+
+
 	sf::Texture playagaintexture; 
 	sf::Sprite playagainsprite; 
 	std::unique_ptr<sf::RenderWindow> window; 
@@ -31,6 +39,7 @@ private:
 	void initwindow();
 	void inittexture();
 	void initvaraible();
+	void initsound();
 	void pollevents();
 	bird b; 
 	int randno, randnoforpipe2, score; 
@@ -40,8 +49,8 @@ public:
 	// public function
 	const bool isGameRunning() const;
 	void initpipetexture();
-	void movepipe();
 	void spawnandmovepipe();
+	void spawnandmoveground();
 	void deleteground();
 	void deletepipe();
 	void birdpipecollison();
@@ -50,6 +59,7 @@ public:
 	void GameOverScreen();
 	void playagainscreen();
 	void restartGame();
+	
 	void update(); 
 	void render(); 
  };
