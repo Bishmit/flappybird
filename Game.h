@@ -18,6 +18,9 @@ private:
 	sf::Font font; // this is the font for the score
 	sf::Texture tex; // this is the texture of the gameover png 
 	sf::Sprite sprite;// this is the sprite of the gameover png
+
+	sf::Texture playagaintexture; 
+	sf::Sprite playagainsprite; 
 	std::unique_ptr<sf::RenderWindow> window; 
 	std::unordered_map<std::string, std::unique_ptr<sf::Texture>> pipemap; 
 	std::vector<std::unique_ptr<pipes>> p; 
@@ -45,6 +48,8 @@ public:
 	void scoresystem();
 	void makegroundcollision();
 	void GameOverScreen();
+	void playagainscreen();
+	void restartGame();
 	void update(); 
 	void render(); 
  };

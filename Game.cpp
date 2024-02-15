@@ -25,6 +25,7 @@ void Game::update()
 			i->update();
 		}
 		GameOverScreen();
+		playagainscreen(); 
 	}
 	scoresystem(); 
 	birdpipecollison();
@@ -37,17 +38,18 @@ void Game::render()
 {
 	this->window->clear();  
 	this->window->draw(bgsprite); 
-
-	for (int i = 0; i < p.size(); i++) {
-		p[i]->render(window.get()); 
-	}
 	
-	for (int i = 0; i < p1.size(); i++) {
-		p1[i]->render(window.get());
-	}
-	for (int i = 0; i < groundVector.size(); i++) {
-		groundVector[i]->render(window.get());
-	}
+		for (int i = 0; i < p.size(); i++) {
+			p[i]->render(window.get());
+		}
+		for (int i = 0; i < p1.size(); i++) {
+			p1[i]->render(window.get());
+		}
+
+		for (int i = 0; i < groundVector.size(); i++) {
+			groundVector[i]->render(window.get());
+		}
+	
 	b.render(this->window.get());
 	window->draw(text); 
 	if (gameover) {
@@ -55,7 +57,7 @@ void Game::render()
 		const sf::Time cooldowntime = sf::seconds(0.5);
 		if (cooldownclock.getElapsedTime() >= cooldowntime) {
 			window->draw(sprite);
-			//gameover png will be shown after half of the second
+			window->draw(playagainsprite); 
 		}
 	}
 	this->window->display(); 
@@ -98,6 +100,12 @@ void Game::pollevents() {
 		if (event.type == sf::Event::Closed) {
 			window->close(); 
 		}
+		if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left && gameover) {
+			if (playagainsprite.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)) {
+				restartGame();
+			}
+			
+		}
 	 }
 }
 
@@ -119,7 +127,7 @@ void Game::movepipe() {
 	static sf::Clock cooldownClock;
 	const sf::Time cooldownTime = sf::seconds(1);
 	randno = rand() % 130;
-	randnoforpipe2 = rand() % 80;
+	randnoforpipe2 = rand() % 100;
 	if (cooldownClock.getElapsedTime() >= cooldownTime) {
 		p.push_back(std::make_unique<pipes>(pipemap["downpipe"].get(), 300.f, -256.f + randno, -2.f, 0.f, 1.5f));
 		p1.push_back(std::make_unique<pipes>(pipemap["uppipe"].get(), 300.f, 250.f + randnoforpipe2, -2.f, 0.f, 1.5f));
@@ -231,7 +239,24 @@ void Game::GameOverScreen() {
 		
 }
 
+void Game::playagainscreen() {
+	playagaintexture.loadFromFile("Assets/playagain.png"); 
+	playagainsprite.setTexture(playagaintexture); 
+	playagainsprite.setPosition(window->getSize().x / 4.5f, window->getSize().y / 2.3f);
+	playagainsprite.setScale(sf::Vector2f(0.6f, 0.6f)); 
+}
 
+void Game::restartGame() {
+	gameover = false; 
+	b.is_flying = false;
+	b.iskeypressed = false;
+	b.setposition(10.f, 10.f);
+    p.clear(); 
+	p1.clear(); 
+	this->score = 0; 
+	text.setString("Score: " + std::to_string(this->score));
+
+}
 
 
 
