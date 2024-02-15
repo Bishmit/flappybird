@@ -24,12 +24,13 @@ void Game::update()
 		for (auto& i : groundVector) {
 			i->update();
 		}
+		GameOverScreen();
 	}
 	scoresystem(); 
 	birdpipecollison();
 	makegroundcollision(); 
 	deleteground(); 
-	deletepipe();
+	deletepipe();	
 }
 
 void Game::render()
@@ -49,6 +50,14 @@ void Game::render()
 	}
 	b.render(this->window.get());
 	window->draw(text); 
+	if (gameover) {
+		static sf::Clock cooldownclock;
+		const sf::Time cooldowntime = sf::seconds(0.5);
+		if (cooldownclock.getElapsedTime() >= cooldowntime) {
+			window->draw(sprite);
+			//gameover png will be shown after half of the second
+		}
+	}
 	this->window->display(); 
 }
 
@@ -213,6 +222,13 @@ void Game::makegroundcollision() {
 			*/
 		}
 	}
+}
+
+void Game::GameOverScreen() {
+		tex.loadFromFile("Assets/gameover.png");
+		sprite.setTexture(tex);
+		sprite.setPosition(window->getSize().x / 6.0f, window->getSize().y / 3.0f);
+		
 }
 
 
