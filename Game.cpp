@@ -27,6 +27,7 @@ void Game::update()
 		}
 		GameOverScreen();
 		playagainscreen(); 
+		initHighScore();
 	}
 	scoresystem(); 
 	birdpipecollison();
@@ -268,6 +269,27 @@ void Game::initsound() {
 	pointsound.setBuffer(pointbuffer);
 
 }
+
+void Game::initHighScore() {
+	std::ifstream readfile; 
+	readfile.open("HighScore/highscore.txt"); 
+	if (readfile.is_open()) {
+		while (!readfile.eof()) {
+			readfile >> highscore; 
+		}
+	}
+	readfile.close(); 
+
+	std::ofstream writefile("HighScore/highscore.txt");
+	if (writefile.is_open()) {
+		if (score > highscore) {
+			highscore = score; 
+		}
+		writefile << highscore; 
+	}
+	writefile.close(); 
+}
+
 
 
 

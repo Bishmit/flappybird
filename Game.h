@@ -8,6 +8,7 @@
 #include<iostream>
 #include<cstdlib>
 #include<ctime>
+#include<fstream>
 class Game {
 private: 
 	// variable
@@ -16,6 +17,8 @@ private:
 	sf::Sprite bgsprite;  
 	sf::Text text; // this is text for the score
 	sf::Font font; // this is the font for the score
+	sf::Text Highscoretext; // this is text for the highscore
+	sf::Font Highscorefont; // this is the font for the highscore
 	sf::Texture tex; // this is the texture of the gameover png 
 	sf::Sprite sprite;// this is the sprite of the gameover png
 
@@ -40,9 +43,10 @@ private:
 	void inittexture();
 	void initvaraible();
 	void initsound();
+	void initHighScore(); 
 	void pollevents();
 	bird b; 
-	int randno, randnoforpipe2, score; 
+	int randno, randnoforpipe2, score, highscore; 
 	bool gameover, is_scored; 
 public: 
 	Game(); 
