@@ -27,9 +27,11 @@ void Game::update()
 		}
 		GameOverScreen();
 		playagainscreen(); 
+		showHighScore(); 
 		initHighScore();
 	}
 	scoresystem(); 
+	HighScoreMsg(); 
 	birdpipecollison();
 	makegroundcollision(); 
 	deleteground(); 
@@ -54,12 +56,14 @@ void Game::render()
 	
 	b.render(this->window.get());
 	window->draw(text); 
+	window->draw(newhighscoremsgtext); 
 	if (gameover) {
 		static sf::Clock cooldownclock;
 		const sf::Time cooldowntime = sf::seconds(0.5);
 		if (cooldownclock.getElapsedTime() >= cooldowntime) {
 			window->draw(sprite);
 			window->draw(playagainsprite); 
+			window->draw(Highscoretext); 
 		}
 	}
 	this->window->display(); 
@@ -86,6 +90,18 @@ void Game::inittexture()
 	text.setCharacterSize(34);
 	text.setFillColor(sf::Color::White);
 	text.setPosition(180.f, 5.f);
+
+	// for highscore 
+	if (!Highscorefont.loadFromFile("Fonts/PixellettersFull.ttf")) {
+		std::cout << "Error: Font could not be loaded!" << std::endl;
+	}
+	Highscoretext.setFont(Highscorefont); 
+
+	// for msg on the screen
+	if (!newhighscoremsgfont.loadFromFile("Fonts/PixellettersFull.ttf")) {
+		std::cout << "Error: Font could not be loaded!" << std::endl;
+	}
+	newhighscoremsgtext.setFont(newhighscoremsgfont);
 }
 
 void Game::initvaraible() {
@@ -289,6 +305,32 @@ void Game::initHighScore() {
 	}
 	writefile.close(); 
 }
+
+void Game::showHighScore() {
+		Highscoretext.setString("Highscore: " + std::to_string(highscore)); 
+		Highscoretext.setCharacterSize(34);
+		Highscoretext.setFillColor(sf::Color::White);
+		Highscoretext.setPosition(window->getSize().x / 5.0f, window->getSize().y / 4.0f);
+}
+
+void Game::HighScoreMsg() {
+	static sf::Clock clock;
+	const sf::Time displayTime = sf::seconds(2);
+	static bool isNewHighScoreMsgDisplayed = false;
+	if (score > highscore) {
+		if (!isNewHighScoreMsgDisplayed) {
+			newhighscoremsgtext.setString("Hehe you set a new Highscore, homie");
+			newhighscoremsgtext.setCharacterSize(24);
+			newhighscoremsgtext.setFillColor(sf::Color::Black);
+			newhighscoremsgtext.setPosition(window->getSize().x / 7.0f, window->getSize().y / 4.0f);
+			isNewHighScoreMsgDisplayed = true;
+		}
+		else if (clock.getElapsedTime() >= displayTime) {
+			newhighscoremsgtext.setString("");
+		}
+	}
+}
+
 
 
 

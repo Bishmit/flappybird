@@ -19,6 +19,8 @@ private:
 	sf::Font font; // this is the font for the score
 	sf::Text Highscoretext; // this is text for the highscore
 	sf::Font Highscorefont; // this is the font for the highscore
+	sf::Text newhighscoremsgtext; 
+	sf::Font newhighscoremsgfont; 
 	sf::Texture tex; // this is the texture of the gameover png 
 	sf::Sprite sprite;// this is the sprite of the gameover png
 
@@ -43,7 +45,11 @@ private:
 	void inittexture();
 	void initvaraible();
 	void initsound();
-	void initHighScore(); 
+	void initHighScore();
+	void showHighScore();
+
+	void HighScoreMsg();
+
 	void pollevents();
 	bird b; 
 	int randno, randnoforpipe2, score, highscore; 
